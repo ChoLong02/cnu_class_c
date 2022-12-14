@@ -1,182 +1,233 @@
 #include <stdio.h>
 #include <string.h>
 
-// ╕▐┤║╟е ╗¤╝║(└№┐к)
-char *burger_name[3] = {"║Є╕╞", "┼ы╗ї┐ь┐═╞█", "╜╬└╠╣Ў░┼"};
-char *side_name[3] = {"╕╞│╩░┘", "─б┴ю╜║╞╜", "┐└┬б╛ю╕╡"};
-char *drink_name[3] = {"─┌─л─▌╢є", "┴ж╖╬─▌╢є", "╜║╟┴╢є└╠╞о"};
+// ыйФыЙ┤эСЬ ьГЭьД▒(ьаДьЧн)
+char *burger_name[3] = {"ы╣Еызе", "эЖ╡ьГИьЪ░ьЩАэН╝", "ьЛ╕ьЭ┤ы▓Дъ▒░"};
+char *side_name[3] = {"ызеыДИъ▓Я", "ь╣ШьжИьКдэЛ▒", "ьШдьзХьЦ┤ызБ"};
+char *drink_name[3] = {"ь╜Фь╣┤ь╜ЬыЭ╝", "ьаЬыбЬь╜ЬыЭ╝", "ьКдэФДыЭ╝ьЭ┤эК╕"};
 
-// ░б░▌╟е ╗¤╝║(└№┐к)
+// ъ░Аъ▓йэСЬ ьГЭьД▒(ьаДьЧн)
 int burger_price[3] = {5900, 5500, 4300};
 int side_price[3] = {2000, 1500, 2000};
 int drink_price[3] = {1200, 1000, 1000};
 
-// ░э░┤ ┴╓╣о ▒т╖╧ └·└х(└№┐к)
-char *menu_save[3] = {};  // ┴╓╣о ╕▐┤║
-int price_save[3] = {};   // ┴╓╣о ░б░▌
+// ъ│аъ░Э ьг╝ым╕ ъ╕░ыбЭ ьаАьЮе(ьаДьЧн)
+char *menu_save[10] = {};  // ьг╝ым╕ ыйФыЙ┤
+int price_save[10] = {};   // ьг╝ым╕ ъ░Аъ▓й
 
 void print_main_menu(void);
 void print_order(void);
 int choice_burger(void);
 int choice_side(void);
 int choice_drink(void); 
+int empty_order_search(void);
+void print_total_order(void);
 
 int main() {
     while(1) {
-        // 1.╕▐└╬ ╕▐┤║ ├т╖┬
+        // 1.ыйФьЭ╕ ыйФыЙ┤ ь╢Ьыае
         print_main_menu();
         
-        // 2.╗ч┐ы└┌ ╕▐└╬ ╕▐┤║ ╝▒┼├
-        int menu_num = 0;  // ╗ч┐ы└┌░б ╝▒┼├╟╤ ╕▐┤║╣°╚г └·└х
-        puts("бс ┐°╟╧╜├┤┬ ╕▐┤║╣°╚г╕ж ╝▒┼├╟╧╝╝┐ф.");
+        // 2.ьВмьЪйьЮР ыйФьЭ╕ ыйФыЙ┤ ьДаэГЭ
+        int menu_num = 0;  // ьВмьЪйьЮРъ░А ьДаэГЭэХЬ ыйФыЙ┤ы▓ИэШ╕ ьаАьЮе
+        puts("тЦа ьЫРэХШьЛЬыКФ ыйФыЙ┤ы▓ИэШ╕ые╝ ьДаэГЭэХШьД╕ьЪФ.");
         while(1) {  // 1:True, 0:False
-            printf(">> ╣°╚г: ");
+            printf(">> ы▓ИэШ╕: ");
             scanf("%d", &menu_num);
             if(menu_num >= 1 && menu_num <= 4) {  // 1~4 out
                 break;
             } else {
-                puts("Warning: 1~4└╟ ╣°╚г╕ж └╘╖┬╟╪┴╓╝╝┐ф.");
+                puts("Warning: 1~4ьЭШ ы▓ИэШ╕ые╝ ьЮЕыаеэХ┤ьг╝ьД╕ьЪФ.");
             }
         }
 
-        // 3.╝╝║╬╕▐┤║ ├т╖┬ (1~4 in)
-        int order_num;  // ╗ч┐ы└┌░б ╝▒┼├╟╤ ╝н║ъ╕▐┤║ ╣°╚г
-        if(menu_num == 1) {          // ╟▄╣Ў░┼ ╝╝╞о
+        // 3.ьД╕ы╢АыйФыЙ┤ ь╢Ьыае (1~4 in)
+        int order_num;  // ьВмьЪйьЮРъ░А ьДаэГЭэХЬ ьДЬы╕МыйФыЙ┤ ы▓ИэШ╕
+        int empty_idx;
+        if(menu_num == 1) {          // эЦДы▓Дъ▒░ ьД╕эК╕
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_burger();
-            menu_save[0] = burger_name[order_num-1];  
-            price_save[0] = burger_price[order_num-1];
+            menu_save[empty_idx] = burger_name[order_num-1];  
+            price_save[empty_idx] = burger_price[order_num-1];
+            
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_side();
-            menu_save[1] = side_name[order_num-1];  // ╣Ў░┼ └╠╕з
-            price_save[1] = side_price[order_num-1];
+            menu_save[empty_idx] = side_name[order_num-1];  // ы▓Дъ▒░ ьЭ┤ыжД
+            price_save[empty_idx] = side_price[order_num-1];
+            
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_drink();
-            menu_save[2] = drink_name[order_num-1];  // ╣Ў░┼ └╠╕з
-            price_save[2] = drink_price[order_num-1];
+            menu_save[empty_idx] = drink_name[order_num-1];  // ы▓Дъ▒░ ьЭ┤ыжД
+            price_save[empty_idx] = drink_price[order_num-1];
             print_order();
 
-        } else if(menu_num == 2) {   // ╟▄╣Ў░┼
+        } else if(menu_num == 2) {   // эЦДы▓Дъ▒░
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_burger();
-            menu_save[0] = burger_name[order_num-1];  // ╣Ў░┼ └╠╕з
-            price_save[0] = burger_price[order_num-1];  // ╣Ў░┼ ░б░▌
+            menu_save[empty_idx] = burger_name[order_num-1];  // ы▓Дъ▒░ ьЭ┤ыжД
+            price_save[empty_idx] = burger_price[order_num-1];  // ы▓Дъ▒░ ъ░Аъ▓й
             print_order();
-        } else if(menu_num == 3) {   // ╗ч└╠╡х
+        } else if(menu_num == 3) {   // ьВмьЭ┤ыУЬ
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_side();
-            menu_save[0] = side_name[order_num-1];
-            price_save[0] = side_price[order_num-1];
+            menu_save[empty_idx] = side_name[order_num-1];
+            price_save[empty_idx] = side_price[order_num-1];
             print_order();
-        } else if(menu_num == 4) {   // ╡х╕╡┼й
+        } else if(menu_num == 4) {   // ыУЬызБэБм
+            empty_idx = empty_order_search();  // ы╣И ь╣╕ ь░╛ъ╕░
             order_num = choice_drink();
-            menu_save[0] = drink_name[order_num-1];
-            price_save[0] = drink_price[order_num-1];
+            menu_save[empty_idx] = drink_name[order_num-1];
+            price_save[empty_idx] = drink_price[order_num-1];
             print_order();
         }
 
-        // ├▀░б ┴╓╣о └п╣л
-        puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
-        puts("бс ├▀░б ┴╓╣о╟╧╜├░┌╜└┤╧▒ю? (yes=1/no=0)");
-        printf(">> └╘╖┬: ");
+        // ь╢Фъ░А ьг╝ым╕ ьЬаым┤
+        puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+        puts("тЦа ь╢Фъ░А ьг╝ым╕эХШьЛЬъ▓аьК╡ыЛИъ╣М? (yes=1/no=0)");
+        printf(">> ьЮЕыае: ");
         int order_yn;
         scanf("%d", &order_yn);
         if(order_yn == 1) {
             continue; 
         } else {
+            // ъ│аъ░ЭьЭ┤ ьг╝ым╕эХЬ ыйФыЙ┤ьаХы│┤ьЩА ь┤Эъ░Аъ▓йьЭД ь╢Ьыае
+            print_total_order();
             break; 
         }
     }
-    // + ▒т┴╕ ┴╓╣о▒т╖╧(3─н) бц ┤├╖┴╝н(100─н)
-    // + ┴╓╣о╟╥╢з╕╢┤┘ ╕ю ░│┬░ count  
-    // ░с┴ж┴д║╕ ├т╖┬
-    // 1.┴╓╣о╟▀┤° ▒т╖╧ бц ╕▐┤║, ├╤░б░▌ ├т╖┬
+    // + ъ╕░ьб┤ ьг╝ым╕ъ╕░ыбЭ(3ь╣╕) тЖТ ыКШыадьДЬ(100ь╣╕)
+    // + ьг╝ым╕эХаыХМызИыЛд ыкЗ ъ░Ььз╕ count  
+    // ъ▓░ьаЬьаХы│┤ ь╢Ьыае
+    // 1.ьг╝ым╕эЦИыНШ ъ╕░ыбЭ тЖТ ыйФыЙ┤, ь┤Эъ░Аъ▓й ь╢Ьыае
 }
 
-// ╕▐└╬ ╕▐┤║╕ж ├т╖┬╟╧┤┬ ╟╘╝Ў
+// ыйФьЭ╕ ыйФыЙ┤ые╝ ь╢ЬыаеэХШыКФ эХиьИШ
 void print_main_menu(void) {
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
-    puts("бс == CNU ╣Ў░┼ 2022 ==");
-    puts("бс  - Version 1.0");   
-    puts("бс  - Develop by cholong02");   
-    puts("бс  - Date 2022.12.07");   
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
-    puts("бс └·╚ё ╕┼└х└╗ ├г╛╞┴╓╝┼╝н ░и╗ч╟╒┤╧┤┘.");
-    puts("бс ┐°╟╧╜├┤┬ ╕▐┤║╕ж ╝▒┼├╟╪┴╓╝╝┐ф.");
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
-    puts("бс 1.╟▄╣Ў░┼ ╝╝╞о");  // ╟▄╣Ў░┼, ╗ч└╠╡х, └╜╖с
-    puts("бс 2.╟▄╣Ў░┼ ╕▐┤║");  // ╟▄╣Ў░┼
-    puts("бс 3.╗ч└╠╡х ╕▐┤║");  // ╗ч└╠╡х
-    puts("бс 4.╡х╕╡┼й ╕▐┤║");  // └╜╖с
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+    puts("тЦа == CNU ы▓Дъ▒░ 2022 ==");
+    puts("тЦа  - Version 1.0");   
+    puts("тЦа  - Develop by cholong02");   
+    puts("тЦа  - Date 2022.12.07");   
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+    puts("тЦа ьаАэЭм ыздьЮеьЭД ь░╛ьХДьг╝ьЕФьДЬ ъ░РьВмэХйыЛИыЛд.");
+    puts("тЦа ьЫРэХШьЛЬыКФ ыйФыЙ┤ые╝ ьДаэГЭэХ┤ьг╝ьД╕ьЪФ.");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+    puts("тЦа 1.эЦДы▓Дъ▒░ ьД╕эК╕");  // эЦДы▓Дъ▒░, ьВмьЭ┤ыУЬ, ьЭМыгМ
+    puts("тЦа 2.эЦДы▓Дъ▒░ ыйФыЙ┤");  // эЦДы▓Дъ▒░
+    puts("тЦа 3.ьВмьЭ┤ыУЬ ыйФыЙ┤");  // ьВмьЭ┤ыУЬ
+    puts("тЦа 4.ыУЬызБэБм ыйФыЙ┤");  // ьЭМыгМ
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
 }
 
 
-// 1.╟▄╣Ў░┼ ┴╓╣о
+// 1.эЦДы▓Дъ▒░ ьг╝ым╕
 int choice_burger(void) {
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     puts("== Burger Menu ==");
     for(int i=0; i<3; i++) {
-        printf("брбр %d.%s(%d┐°) \n", i+1, burger_name[i], burger_price[i]);
+        printf("тЦбтЦб %d.%s(%dьЫР) \n", i+1, burger_name[i], burger_price[i]);
     }
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     int choice_num;
     while(1) {
-        printf(">> ╣°╚г: ");
+        printf(">> ы▓ИэШ╕: ");
         scanf("%d", &choice_num); 
         if(choice_num >= 1 && choice_num <= 3) {
             break;
         } else {
-            puts("Warning: 1~3└╟ ╣°╚г╕ж └╘╖┬╟╪┴╓╝╝┐ф.");
+            puts("Warning: 1~3ьЭШ ы▓ИэШ╕ые╝ ьЮЕыаеэХ┤ьг╝ьД╕ьЪФ.");
         }
     }
     return choice_num;
 }
-// 2.╗ч└╠╡х ┴╓╣о
+// 2.ьВмьЭ┤ыУЬ ьг╝ым╕
 int choice_side(void) {
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     puts("== Side Menu ==");
     for(int i=0; i<3; i++) {
-        printf("брбр %d.%s(%d┐°) \n", i+1, side_name[i], side_price[i]);
+        printf("тЦбтЦб %d.%s(%dьЫР) \n", i+1, side_name[i], side_price[i]);
     }
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     int choice_num;
     while(1) {
-        printf(">> ╣°╚г: ");
+        printf(">> ы▓ИэШ╕: ");
         scanf("%d", &choice_num); 
         if(choice_num >= 1 && choice_num <= 3) {
             break;
         } else {
-            puts("Warning: 1~3└╟ ╣°╚г╕ж └╘╖┬╟╪┴╓╝╝┐ф.");
+            puts("Warning: 1~3ьЭШ ы▓ИэШ╕ые╝ ьЮЕыаеэХ┤ьг╝ьД╕ьЪФ.");
         }
     }
     return choice_num;
 }
-// 3.╡х╕╡┼й ┴╓╣о
+// 3.ыУЬызБэБм ьг╝ым╕
 int choice_drink(void) {
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     puts("== Drink Menu ==");
     for(int i=0; i<3; i++) {
-        printf("брбр %d.%s(%d┐°) \n", i+1, drink_name[i], drink_price[i]);
+        printf("тЦбтЦб %d.%s(%dьЫР) \n", i+1, drink_name[i], drink_price[i]);
     }
-    puts("бсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбсбс");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
     int choice_num;
     while(1) {
-        printf(">> ╣°╚г: ");
+        printf(">> ы▓ИэШ╕: ");
         scanf("%d", &choice_num); 
         if(choice_num >= 1 && choice_num <= 3) {
             break;
         } else {
-            puts("Warning: 1~3└╟ ╣°╚г╕ж └╘╖┬╟╪┴╓╝╝┐ф.");
+            puts("Warning: 1~3ьЭШ ы▓ИэШ╕ые╝ ьЮЕыаеэХ┤ьг╝ьД╕ьЪФ.");
         }
     }
     return choice_num;
 }
 
 
-// ┴╓╣о╟╤ ╕▐┤║┐═ ░б░▌└╗ ├т╖┬
+// ьг╝ым╕эХЬ ыйФыЙ┤ьЩА ъ░Аъ▓йьЭД ь╢Ьыае
 void print_order(void) {
     int menu_len = sizeof(menu_save) / sizeof(menu_save[0]);
     int price_len = sizeof(price_save) / sizeof(price_save[0]);
     for(int i=0; i<menu_len; i++) {
-        printf("┴╓╣о[%d]: %s\n", i, menu_save[i]);
+        printf("ьг╝ым╕[%d]: %s\n", i, menu_save[i]);
     }
     for(int i=0; i<price_len; i++) {
-        printf("░б░▌[%d]: %d\n", i, price_save[i]);
+        printf("ъ░Аъ▓й[%d]: %d\n", i, price_save[i]);
     }
+}
+
+// ьг╝ым╕ъ╕░ыбЭ ы╣Иь╣╕ ь░╛ъ╕░
+int empty_order_search() {
+    int order_len = sizeof(price_save) / sizeof(price_save[0]);
+    int price, idx;
+    // ы░░ьЧ┤ эБмъ╕░ызМэБ╝ ы░Шы│╡ тЖТ ex)ы░░ьЧ┤эБмъ╕░ъ░А 10ь╣╕ : 10ы▓И ы░Шы│╡
+    for(int i=0; i<order_len; i++) {
+        price = price_save[i];
+        if(price == 0) {
+            idx = i;
+            break;
+        }
+    }
+    return idx;
+}
+
+// ьаДь▓┤ ьг╝ым╕ьаХы│┤ьЩА ь┤Эъ░Аъ▓й ь╢Ьыае
+void print_total_order(void) {
+    // ь┤Э ъ░Аъ▓й ъ│ДьВ░
+    int total_price = 0;
+    int order_len = sizeof(price_save) / sizeof(price_save[0]);
+    for(int i=0; i<order_len; i++) {
+        total_price += price_save[i];
+    }
+    // ь╢Ьыае
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+    puts("тЦа ъ│аъ░ЭыЛШ ьг╝ым╕эХШьЛа ыйФыЙ┤ыКФ");
+    for(int i=0; i<order_len; i++) {
+        if(menu_save[i] == NULL) {
+            break;
+        }
+        printf("тЦбтЦб %d: %s\n", (i+1), menu_save[i]);
+    }
+    printf("тЦа ьЬ╝ыбЬ ь┤Э ьг╝ым╕ъ╕ИьХбьЭА %dьЫР ьЮЕыЛИыЛд.\n", total_price);
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
+    puts("ьЭ┤ьЪйэХ┤ьг╝ьЕФьДЬ ъ░РьВмэХйыЛИыЛд.");
+    puts("тЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦатЦа");
 }
